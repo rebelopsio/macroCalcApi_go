@@ -2,6 +2,13 @@ package calculations
 
 import "strings"
 
+type MacrosStruct struct {
+	protein int
+	carbs int
+	fats int
+	TDEE float32
+}
+
 func BMR(Sex string, Age int, HeightInches int, Weight int) float32 {
 	var BMRVal float32
 	BMRVal = 0.0
@@ -14,10 +21,10 @@ func BMR(Sex string, Age int, HeightInches int, Weight int) float32 {
 	return BMRVal
 }
 
-func Cals(BMRVal float32, Type string) float32 {
+func Cals(BMRVal float32, intensity string) float32 {
 	var calories float32
 	var multiplier float32
-	switch strings.ToUpper(Type) {
+	switch strings.ToUpper(intensity) {
 	case "REST":
 		multiplier = 1.2
 	case "LIGHT":
@@ -30,3 +37,26 @@ func Cals(BMRVal float32, Type string) float32 {
 	calories = BMRVal * multiplier
 	return calories
 }
+
+func Macros(calories int, weight int, intensity string) MacrosStruct {
+	var user_macros MacrosStruct
+	user_macros.protein = weight
+	if (intensity == "rest") {
+	user_macros.carbs = int(weight * 0.5)
+	}
+
+	if (intensity == "light") {
+	user_macros.carbs = int(weight * 1)
+	}
+
+	if (intensity == "moderate") {
+	user_macros.carbs = int(weight * 1.5)
+	}
+
+	if (intensity == "hard") {
+	user_macros.carbs = int(weight * 2)
+	}
+	user_macros.fats = int((calories - ((carbs + protein) * 4)) / 9)
+
+	return user_macros
+	}
